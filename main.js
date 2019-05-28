@@ -4,9 +4,12 @@ var today = new Date();
 var hour = today.getHours();
 var minute = today.getMinutes();
 
+var HEAD_ROW = 2;
+var HEAD_COLUMN = 2;
+
 var sheet = SpreadsheetApp.getActiveSheet();
-var hourRange = sheet.getRange(1, 2, 1, 96);
-var dateRange = sheet.getRange(2, 1, 30, 1);
+var hourRange = sheet.getRange(1, HEAD_COLUMN, 1, 96);
+var dateRange = sheet.getRange(HEAD_ROW, 1, 30, 1);
 
 var CLR_DEFAULT  = "#ffffff"
 var CLR_SLEEP    = "#9dcce0"
@@ -117,7 +120,7 @@ function recordWakeUp() {
 }
 
 function colorBackgroundToNow(colorScale) {
-  var endColumn = 97;
+  var endColumn = HEAD_COLUMN + 95;
   var hasFound = false;
   var rowOfToday = getTargetDayRow(today);
   var columnOfNow = getTargetHourColumn(today);
@@ -150,7 +153,7 @@ function colorBackgroundToNow(colorScale) {
 }
 
 function getTargetDayRow(targetDate) {
-  var i = -9;
+  var i = HEAD_ROW - 11;
     
   dateRange.getValues().forEach(function(date) {
     if (new Date(date).getDate() == targetDate.getDate()) {
@@ -163,7 +166,7 @@ function getTargetDayRow(targetDate) {
 }
 
 function getTargetHourColumn(targetDate) {
-  var j = 2;
+  var j = HEAD_COLUMN;
   var hasFound = false;
   
   hourRange.getValues()[0].forEach(function(eachHour) {
