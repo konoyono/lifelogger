@@ -51,11 +51,103 @@ function reply(e) {
     recordGoToBed();
   } else if (input == "起床") {
     recordWakeUp();
+  } else if (input == "気分") {
+    sendEmotionList(e);
+  }
+  
+  if (input == "最高！！" || input == "非常に良い" || input == "良い" || input == "ふつう" || input == "悪い" || input == "非常に悪い" || input == "最悪！！") {
+    recordEmotion(input)
   }
   
   output = getStatus();
   
   sendReply(e, output);
+}
+
+
+function sendEmotionList(e) {
+  var message = {
+    "replyToken" : e.replyToken,
+    "messages" : [
+      {
+      "type": "template",
+      "altText": "emotion template",
+      "template": {
+        "type": "image_carousel",
+        "columns": [
+            {
+                "imageUrl": "https://iconbox.fun/wp/wp-content/uploads/110_h_24.png",
+                "action": {
+                    "type": "message",
+                    "label": "最高！！",
+                    "text": "最高！！"
+                }
+            },
+            {
+                "imageUrl": "https://iconbox.fun/wp/wp-content/uploads/110_h_hoso.png",
+                "action": {
+                    "type": "message",
+                    "label": "非常に良い",
+                    "text": "非常に良い"
+                }
+            },
+            {
+                "imageUrl": "https://iconbox.fun/wp/wp-content/uploads/106_h_hoso.png",
+                "action": {
+                    "type": "message",
+                    "label": "良い",
+                    "text": "良い"
+                }
+            },
+            {
+                "imageUrl": "https://iconbox.fun/wp/wp-content/uploads/107_h_hoso.png",
+                "action": {
+                    "type": "message",
+                    "label": "ふつう",
+                    "text": "ふつう"
+                }
+            },
+            {
+                "imageUrl": "https://iconbox.fun/wp/wp-content/uploads/108_h_hoso.png",
+                "action": {
+                    "type": "message",
+                    "label": "悪い",
+                    "text": "悪い"
+                }
+            },
+            {
+                "imageUrl": "https://iconbox.fun/wp/wp-content/uploads/109_h_hoso.png",
+                "action": {
+                    "type": "message",
+                    "label": "非常に悪い",
+                    "text": "非常に悪い"
+                }
+            },
+            {
+                "imageUrl": "https://iconbox.fun/wp/wp-content/uploads/118_h_hoso.png",
+                "action": {
+                    "type": "message",
+                    "label": "最悪！！",
+                    "text": "最悪！！"
+                }
+            },
+          ]
+        }
+      }
+    ]
+  };
+  var replyData = {
+    "method" : "post",
+    "headers" : {
+      "Content-Type" : "application/json",
+      "Authorization" : "Bearer " + ACCESS_TOKEN
+    },
+    "payload" : JSON.stringify(message)
+  };
+  UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply", replyData);
+}
+
+function recordEmotion() {
 }
 
 function sendReply(e, output) {
@@ -153,7 +245,7 @@ function colorBackgroundToNow(colorScale) {
 }
 
 function getTargetDayRow(targetDate) {
-  var i = HEAD_ROW - 11;
+  var i = HEAD_ROW - 10;
     
   dateRange.getValues().forEach(function(date) {
     if (new Date(date).getDate() == targetDate.getDate()) {
@@ -223,4 +315,13 @@ function checkDuplicateRecord(input) {
   }
   
   return ""
+}
+
+function getWeather () {
+  var url = "http://weather.livedoor.com/forecast/webservice/json/v1?city=130010";
+  var json = UrlFetchApp.fetch(url).getContentText();
+  var jsonData = JSON.parse(json);
+  var icon = '=IMAGE("' + jsonData["forecasts"][0]["image"]["url"] + '")';
+
+  sheet.getRange(getTargetDayRow(today),3,1,1).setValue(icon);
 }
