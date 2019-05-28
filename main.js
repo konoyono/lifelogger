@@ -147,7 +147,34 @@ function sendEmotionList(e) {
   UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply", replyData);
 }
 
-function recordEmotion() {
+function recordEmotion(input) {
+  switch (input) {
+        case "最高！！":
+            url = "https://iconbox.fun/wp/wp-content/uploads/110_h_24.png";
+            break;
+        case "非常に良い":
+            url = "https://iconbox.fun/wp/wp-content/uploads/110_h_hoso.png";
+            break;
+        case "良い":
+            url = "https://iconbox.fun/wp/wp-content/uploads/106_h_hoso.png";
+            break;
+        case "ふつう":
+            url = "https://iconbox.fun/wp/wp-content/uploads/107_h_hoso.png";
+            break;
+        case "悪い":
+            url = "https://iconbox.fun/wp/wp-content/uploads/108_h_hoso.png";
+            break;
+        case "非常に悪い":
+            url = "https://iconbox.fun/wp/wp-content/uploads/109_h_hoso.png";
+            break;
+        default:
+            url = "https://iconbox.fun/wp/wp-content/uploads/118_h_hoso.png";
+            break;
+        }
+
+  var icon = '=IMAGE("' + url + '")';
+
+  sheet.getRange(getTargetDayRow(today),100,1,1).setValue(icon);
 }
 
 function sendReply(e, output) {
